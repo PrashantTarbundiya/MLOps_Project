@@ -1,75 +1,153 @@
-# Machine Learning Opearations (MLOps)
+# 🎵 Spotify AI Studio: Production MLOps Audio Intelligence & Recommender
 
-## MLOps maturity level 4
+> **MLOps Maturity Level 4**: Continuous Integration, Automated Continuous Training (CT), Continuous Deployment (CD), Statistical Data Drift Monitoring, Prometheus Telemetry, and Interactive Glassmorphism UI Showcase.
 
-## Overview :
-This project implements a robust MLOps pipeline, facilitating the continuous integration, continuous deployment, and monitoring of machine learning models. The infrastructure leverages AWS, Kubernetes, and various open-source tools to ensure scalability, reproducibility, and maintainability.
+---
 
+## 🌟 Overview
 
+**Spotify AI Studio** is an end-to-end MLOps platform engineered to analyze, cluster, and recommend music across a massive catalog of **170,653 tracks** spanning 1921 to 2020. 
 
-## Architecture :
+The system leverages unsupervised high-dimensional audio feature clustering (K-Means, $k=20$), cosine similarity vector projections, statistical data drift detection (Kolmogorov-Smirnov & Wasserstein Distance), and a real-time **FastAPI** microservice coupled with a luxury **dark-mode glassmorphism Web Studio**.
 
-![image](https://github.com/Chandru-21/MLOps_Project/assets/64595758/123511be-fe66-424d-8776-513b908840fe)
+---
 
-## Key Features :
+## 🏗️ Architecture & Pipeline Lifecycle
 
-**Data Versioning** : DVC
+```
+┌─────────────────┐       ┌────────────────────────┐       ┌───────────────────────┐
+│   Spotify Data  │ ────> │  Feature Engineering   │ ────> │  K-Means Clustering   │
+│  (170k+ Tracks) │ (DVC) │ (StandardScaler + Imp) │       │    (k=20 Archetypes)  │
+└─────────────────┘       └────────────────────────┘       └───────────────────────┘
+                                                                       │
+                                                                       ▼
+┌─────────────────┐       ┌────────────────────────┐       ┌───────────────────────┐
+│  Prometheus &   │ <──── │   FastAPI Microservice │ <──── │   Catalog Index &     │
+│  Drift Detector │       │   (REST API + Web UI)  │       │   Model Artifacts     │
+└─────────────────┘       └────────────────────────┘       └───────────────────────┘
+```
 
-**Continuous Integration(CI)** : Triggered through ‘main.yml’ , building the code (docker), tests the code(Pytest),pushes the docker image to AWS ECR. 
+### 1. Data Versioning (DVC)
+* Raw Spotify data (`data/data.csv`, `data_by_genres.csv`, `data_by_year.csv`, `data_by_artist.csv`) is tracked using **DVC** pointer files.
+* Guaranteed immutability and data lineage across retraining cycles.
 
-**Experiment Tracking / Model Versioning** : MLflow 
+### 2. Preprocessing & Feature Engineering
+* 15 continuous acoustic dimensions: `danceability`, `energy`, `valence`, `acousticness`, `instrumentalness`, `liveness`, `loudness`, `tempo`, `speechiness`, `popularity`, `key`, `mode`, `year`, `explicit`, `duration_ms`.
+* Median Imputation (`AudioFeatureImputer`) handles nulls cleanly.
+* `StandardScaler` maps all dimensions into zero-mean, unit-variance space.
+* Artist name normalization and decade binning.
 
-**Continuous Deployment(CD)** : Deploys FastAPI in AWS EKS(kubernetes cluster) for real-time and batch predictions. 
+### 3. Model Architecture & Recommendation Engine
+* **K-Means Clustering ($k=20$)**: Partitions songs into 20 sonic archetypes (e.g., *High-Voltage Rock*, *Midnight Jazz*, *Tropical Latin*, *Ambient Lo-Fi*).
+* **Multi-Dimensional Cosine Similarity**: Real-time Euclidean/Cosine vector projections (`cdist`) across the scaled feature matrix.
+* **Capabilities**:
+  * **Seed Song Recommendation**: Input any track to discover closest sonic matches with match percentages.
+  * **Playlist Centroid Recommender**: Multi-track centroid calculation for combined preference vectors.
+  * **Sonic Mood Studio**: Real-time acoustic sliders (Danceability, Energy, Valence, Tempo) mapping to nearest clusters.
 
-**Continuous Monitoring(CM)** : Integrating the ‘/metrics’ method of  FastAPI in Prometheus and visualizes endpoints in Grafana.  
+### 4. Continuous Monitoring (CM) & Drift Detection
+* **Statistical Divergence**: Evaluates live inference batches against a 10,000-sample baseline using **Two-Sample Kolmogorov-Smirnov (KS) Hypothesis Tests** ($\alpha = 0.05$) and **Wasserstein Earth Mover's Distance**.
+* **Data Quality Verification**: Automatic checks for missing cells, invalid ranges, and duplicated rows.
+* **Live Drift Simulator**: Built-in simulator to test system alerts for sudden shifts (e.g. 1930s Acoustic shift or High-BPM EDM waves).
 
-**Continuous Training(CT)** : Triggers code execution through GitHub Actions when new data is pushed to the remote DVC location and committed to Git. 
+### 5. Telemetry & Observability
+* Exposes `/metrics` endpoint with Prometheus-compatible counters and gauges:
+  * `spotify_mlops_requests_total`
+  * `spotify_mlops_recommendations_total`
+  * `spotify_mlops_drift_checks_total`
+  * `spotify_mlops_latency_avg_ms`
+  * `spotify_mlops_uptime_seconds`
 
-**Drift Monitoring** : Uses a Streamlit app to monitor data drift, target drift, and performs data quality checks.
+---
 
+## 🚀 Quickstart & Local Execution
 
+### 1. Clone & Set Up Environment
+```bash
+cd MLOps_Project
+python -m pip install -r requirements.txt
+```
 
+### 2. Run Model Training Pipeline
+Executes data ingestion, pipeline fitting, evaluation metrics, and fast catalog compilation:
+```bash
+python prediction_model/training_pipeline.py
+```
+*Output:*
+```
+[INFO] Loading dataset from: data/data.csv
+[SUCCESS] Loaded 170,653 tracks successfully.
+[INFO] Training K-Means Pipeline with K=20 clusters...
+[SUCCESS] Pipeline fitting completed in ~11s.
+[SUCCESS] Saved Pipeline Model to: trained_models/song_cluster_pipeline.joblib
+[SUCCESS] Saved Fast Catalog Index to: trained_models/catalog_index.joblib
+```
 
+### 3. Run Automated Tests
+```bash
+python -m pytest tests/test_prediction.py -v
+```
+*All 8 tests validate pipeline loading, search, recommendations, cluster assignment, and drift detection.*
 
+### 4. Launch Production Microservice & UI
+```bash
+python main.py
+```
+Open **[http://localhost:8005](http://localhost:8005)** in your browser to experience the **Spotify AI Studio**!
 
-## Data Monitoring :
+---
 
-**Data Drift Monitoring** :
+## 🌐 Interactive Web UI Showcase
 
-![image](https://github.com/Chandru-21/MLOps_Project/assets/64595758/af0df23d-9980-4ee4-94c0-ddebdb923237)
+The web application is located at `http://localhost:8005/`:
+1. 🎵 **Recommender Tab**: Search any song across 170k+ tracks with live autocomplete, view its audio radar footprint, and explore top matches with similarity scores.
+2. 🎛️ **Sonic Mood Studio**: Interactive audio sliders (Danceability, Energy, Valence, Tempo) and quick presets to discover songs matching custom moods.
+3. 🔬 **MLOps Architecture**: Interactive interactive flowchart detailing every pipeline stage with live specifications.
+4. 📊 **Cluster Archetypes**: Comprehensive gallery of the 20 sonic archetypes with mean features and sample tracks.
+5. 🛡️ **Drift & Quality Center**: Live KS-test monitoring, p-values, Wasserstein divergence, and simulated drift triggers.
+6. ⚡ **API Playground**: Live interactive REST runner for testing all endpoints with JSON response inspector.
 
-**Data Quality checks** :
+---
 
-![image](https://github.com/Chandru-21/MLOps_Project/assets/64595758/c1c62d64-9b69-4ca7-ba45-45ae226a7620)
+## 📡 REST API Reference
 
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | Serves the interactive Spotify AI Studio Web UI |
+| `GET` | `/api/health` | Healthcheck, uptime, track count, and model version |
+| `GET` | `/api/model_info` | Model registry metadata, silhouette score, and cluster profiles |
+| `GET` | `/api/search?q={query}` | Autocomplete search for track titles and artists |
+| `POST` | `/api/recommend` | Single seed song similarity recommendations |
+| `POST` | `/api/recommend_playlist` | Multi-track playlist centroid recommendations |
+| `POST` | `/api/recommend_mood` | Acoustic feature slider-based recommendations |
+| `POST` | `/api/predict_cluster` | Predicts cluster archetype for custom audio features |
+| `GET` | `/api/drift_report` | Runs two-sample KS statistical drift tests |
+| `POST` | `/api/simulate_drift` | Generates synthetic drift events for testing |
+| `POST` | `/api/batch_predict` | Upload CSV for batch prediction and drift auditing |
+| `GET` | `/metrics` | Prometheus telemetry metrics export |
 
-## Continuous Monitoring(CM)
+---
 
-**Exposing "/metrics" on FastAPI to be connected to Prometheus** :
+## 🐳 Docker & Kubernetes Deployment
 
-![fastapi](https://github.com/Chandru-21/MLOps_Project/assets/64595758/09b18b44-8cb1-4a86-9172-c79082cb77c8)
+### Docker Build & Run
+```bash
+docker build -t spotify-mlops:latest .
+docker run -p 8005:8005 spotify-mlops:latest
+```
 
-**FastAPI integrated in to Prometheus** :
+### Kubernetes Deployment
+```bash
+kubectl apply -f deployment.yml
+kubectl apply -f service.yml
+```
 
-![fastapi_prometheus](https://github.com/Chandru-21/MLOps_Project/assets/64595758/4b21c089-bef3-4e39-b5e1-04cb8e026345)
+---
 
-**Integrating Prometheus in to Grafana for Visualization** :
-
-Monitoring FastAPI methods on Grafana,
-
-![fastapi_continuous_monitoring](https://github.com/Chandru-21/MLOps_Project/assets/64595758/930f0a9a-352f-41f9-8106-9b6735af8ce4)
-
-**Monitoring the resources of the Kubernetes cluster on Grafana** :
-
-![grafana_monitoring_containers_dashboard](https://github.com/Chandru-21/MLOps_Project/assets/64595758/d046d9f9-1477-4975-9041-f4aa128bb0f3)
-
-
-
-
-
-
-
-
-
-
-
+## 🧪 Technology Stack
+* **Machine Learning**: `Scikit-Learn`, `KMeans`, `StandardScaler`, `SciPy` (Cosine & KS-Test)
+* **API Microservice**: `FastAPI`, `Uvicorn`, `Pydantic v2`
+* **Data Management**: `Pandas`, `NumPy`, `Joblib`, `DVC`
+* **Continuous Integration**: `Pytest`, `GitHub Actions`
+* **Observability**: `Prometheus`, `AudioDriftDetector`
+* **Frontend Design**: Vanilla CSS (Glassmorphism, Dark Mode), Vanilla JS, Google Fonts Outfit

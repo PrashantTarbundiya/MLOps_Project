@@ -1,50 +1,23 @@
-FROM python:3.10-slim-buster
-
-RUN pip install --upgrade pip
+FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY . /app 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-#set permissions
+COPY requirements.txt /app/
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-RUN chmod +x /app/tests
+COPY . /app
 
-RUN chmod +w /app/tests
+ENV PYTHONPATH="${PYTHONPATH}:/app"
 
-RUN chmod +x /app/prediction_model
-
-RUN chmod +w /app/prediction_model/trained_models
-
-RUN chmod +w /app/prediction_model/datasets
-
-
-ENV PYTHONPATH "${PYTHONPATH}:/app/prediction_model"
-
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN pip install dvc[s3]
-
-# AWS credentials
-ARG AWS_ACCESS_KEY_ID
-ARG AWS_SECRET_ACCESS_KEY
-ENV AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-ENV AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-
-
-RUN dvc pull --force
-
-RUN python /app/prediction_model/training_pipeline.py
-
-RUN pytest -v /app/tests/test_prediction.py
-
-RUN pytest --junitxml=/app/tests/test-results.xml /app/tests/test_prediction.py
+# Verify pipeline tests during build
+RUN python -m pytest tests/test_prediction.py -v
 
 EXPOSE 8005
 
 ENTRYPOINT ["python"]
-
 CMD ["main.py"]
-
-

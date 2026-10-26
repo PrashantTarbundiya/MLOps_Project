@@ -1,0 +1,683 @@
+{
+    "model_version": "1.0.0",
+    "experiment_name": "spotify_audio_clustering_recommendation",
+    "trained_at": "2026-10-22 12:07:10 UTC",
+    "total_tracks": 170653,
+    "n_clusters": 20,
+    "features": [
+        "valence",
+        "year",
+        "acousticness",
+        "danceability",
+        "duration_ms",
+        "energy",
+        "explicit",
+        "instrumentalness",
+        "key",
+        "liveness",
+        "loudness",
+        "mode",
+        "popularity",
+        "speechiness",
+        "tempo"
+    ],
+    "radar_features": [
+        "acousticness",
+        "danceability",
+        "energy",
+        "instrumentalness",
+        "liveness",
+        "valence"
+    ],
+    "metrics": {
+        "inertia": 1052278.7630475536,
+        "silhouette_score": 0.12415232043045271,
+        "davies_bouldin_index": 1.7102959110742137,
+        "calinski_harabasz_score": 79.39922054981635,
+        "training_time_seconds": 13.29
+    },
+    "cluster_distribution": {
+        "0": 11131,
+        "1": 8958,
+        "2": 11751,
+        "3": 14288,
+        "4": 3056,
+        "5": 2673,
+        "6": 5175,
+        "7": 12985,
+        "8": 8709,
+        "9": 11329,
+        "10": 6508,
+        "11": 11513,
+        "12": 2561,
+        "13": 8550,
+        "14": 13101,
+        "15": 8340,
+        "16": 8916,
+        "17": 13780,
+        "18": 169,
+        "19": 7160
+    },
+    "cluster_profiles": {
+        "0": {
+            "name": "Acoustic Serenity & Ballads",
+            "mood": "Calm, Soft & Introspective",
+            "icon": "Acoustic",
+            "track_count": 11131,
+            "mean_features": {
+                "acousticness": 0.903,
+                "danceability": 0.344,
+                "energy": 0.176,
+                "instrumentalness": 0.052,
+                "liveness": 0.196,
+                "valence": 0.24
+            },
+            "sample_tracks": [
+                {
+                    "name": "I'll Be Home For Christmas",
+                    "artists_clean": "Bing Crosby",
+                    "year": 1945
+                },
+                {
+                    "name": "The First Noel - Remastered 1999",
+                    "artists_clean": "Frank Sinatra",
+                    "year": 1957
+                },
+                {
+                    "name": "I'll Be Seeing You",
+                    "artists_clean": "Billie Holiday",
+                    "year": 1957
+                }
+            ]
+        },
+        "1": {
+            "name": "High-Voltage Rock & Grunge",
+            "mood": "Energetic, Raw & Loud",
+            "icon": "Rock",
+            "track_count": 8958,
+            "mean_features": {
+                "acousticness": 0.804,
+                "danceability": 0.554,
+                "energy": 0.335,
+                "instrumentalness": 0.044,
+                "liveness": 0.193,
+                "valence": 0.592
+            },
+            "sample_tracks": [
+                {
+                    "name": "It's Beginning To Look Like Christmas",
+                    "artists_clean": "Bing Crosby",
+                    "year": 1945
+                },
+                {
+                    "name": "Winter Wonderland",
+                    "artists_clean": "Tony Bennett",
+                    "year": 1968
+                },
+                {
+                    "name": "My Baby Just Cares for Me - 2013 Remastered Version",
+                    "artists_clean": "Nina Simone",
+                    "year": 1958
+                }
+            ]
+        },
+        "2": {
+            "name": "Golden Age Pop & Dance",
+            "mood": "Upbeat, Rhythmic & Catchy",
+            "icon": "Pop",
+            "track_count": 11751,
+            "mean_features": {
+                "acousticness": 0.157,
+                "danceability": 0.677,
+                "energy": 0.684,
+                "instrumentalness": 0.025,
+                "liveness": 0.21,
+                "valence": 0.503
+            },
+            "sample_tracks": [
+                {
+                    "name": "Dakiti",
+                    "artists_clean": "Bad Bunny, Jhay Cortez",
+                    "year": 2020
+                },
+                {
+                    "name": "Mood (feat. iann dior)",
+                    "artists_clean": "24kGoldn, iann dior",
+                    "year": 2020
+                },
+                {
+                    "name": "WAP (feat. Megan Thee Stallion)",
+                    "artists_clean": "Cardi B, Megan Thee Stallion",
+                    "year": 2020
+                }
+            ]
+        },
+        "3": {
+            "name": "Vintage Classical & Nostalgia",
+            "mood": "Historical, Orchestral & Pure",
+            "icon": "Classical",
+            "track_count": 14288,
+            "mean_features": {
+                "acousticness": 0.275,
+                "danceability": 0.675,
+                "energy": 0.645,
+                "instrumentalness": 0.043,
+                "liveness": 0.154,
+                "valence": 0.772
+            },
+            "sample_tracks": [
+                {
+                    "name": "Head & Heart (feat. MNEK)",
+                    "artists_clean": "Joel Corry, MNEK",
+                    "year": 2020
+                },
+                {
+                    "name": "La T\u00f3xica",
+                    "artists_clean": "Farruko",
+                    "year": 2020
+                },
+                {
+                    "name": "Vida de Rico",
+                    "artists_clean": "Camilo",
+                    "year": 2020
+                }
+            ]
+        },
+        "4": {
+            "name": "Midnight Jazz & Blues",
+            "mood": "Melancholic, Warm & Smooth",
+            "icon": "Jazz",
+            "track_count": 3056,
+            "mean_features": {
+                "acousticness": 0.8,
+                "danceability": 0.323,
+                "energy": 0.248,
+                "instrumentalness": 0.568,
+                "liveness": 0.197,
+                "valence": 0.217
+            },
+            "sample_tracks": [
+                {
+                    "name": "White Noise Sleeping Aid to Help My Baby Fall Asleep, Sleep Through the Night",
+                    "artists_clean": "White Noise Baby Sleep",
+                    "year": 2015
+                },
+                {
+                    "name": "Calm Rolling Thunder and Soothing Rain",
+                    "artists_clean": "Nature Sounds",
+                    "year": 2012
+                },
+                {
+                    "name": "Shine On You Crazy Diamond (Pts. 1-5)",
+                    "artists_clean": "Pink Floyd",
+                    "year": 1975
+                }
+            ]
+        },
+        "5": {
+            "name": "Modern Bass & Hip-Hop",
+            "mood": "Punchy, Dynamic & Contemporary",
+            "icon": "Hip-Hop",
+            "track_count": 2673,
+            "mean_features": {
+                "acousticness": 0.668,
+                "danceability": 0.664,
+                "energy": 0.274,
+                "instrumentalness": 0.015,
+                "liveness": 0.303,
+                "valence": 0.5
+            },
+            "sample_tracks": [
+                {
+                    "name": "Eyes Blue Like The Atlantic (feat. Subvrbs)",
+                    "artists_clean": "Sista Prod, Subvrbs",
+                    "year": 2020
+                },
+                {
+                    "name": "Skit",
+                    "artists_clean": "BTS",
+                    "year": 2020
+                },
+                {
+                    "name": "Aaron Burr, Sir",
+                    "artists_clean": "Lin-Manuel Miranda, Leslie Odom Jr., Anthony Ramos, Daveed Diggs, Okieriete Onaodowan",
+                    "year": 2015
+                }
+            ]
+        },
+        "6": {
+            "name": "Ambient Chillwave & Lo-Fi",
+            "mood": "Spacious, Dreamy & Meditative",
+            "icon": "Chillwave",
+            "track_count": 5175,
+            "mean_features": {
+                "acousticness": 0.891,
+                "danceability": 0.491,
+                "energy": 0.289,
+                "instrumentalness": 0.818,
+                "liveness": 0.188,
+                "valence": 0.531
+            },
+            "sample_tracks": [
+                {
+                    "name": "All By Myself",
+                    "artists_clean": "Eric Carmen",
+                    "year": 1975
+                },
+                {
+                    "name": "Jovial",
+                    "artists_clean": "Limes",
+                    "year": 2016
+                },
+                {
+                    "name": "To Be Alone With You",
+                    "artists_clean": "Sufjan Stevens",
+                    "year": 2004
+                }
+            ]
+        },
+        "7": {
+            "name": "Retro 80s Synth & Disco",
+            "mood": "Groovy, Bright & Nostalgic",
+            "icon": "Synth",
+            "track_count": 12985,
+            "mean_features": {
+                "acousticness": 0.256,
+                "danceability": 0.664,
+                "energy": 0.647,
+                "instrumentalness": 0.054,
+                "liveness": 0.163,
+                "valence": 0.754
+            },
+            "sample_tracks": [
+                {
+                    "name": "Take You Dancing",
+                    "artists_clean": "Jason Derulo",
+                    "year": 2020
+                },
+                {
+                    "name": "Se Te Nota (with Guaynaa)",
+                    "artists_clean": "Lele Pons, Guaynaa",
+                    "year": 2020
+                },
+                {
+                    "name": "Sofia",
+                    "artists_clean": "Clairo",
+                    "year": 2019
+                }
+            ]
+        },
+        "8": {
+            "name": "Acoustic Folk & Indie Roots",
+            "mood": "Organic, Earthy & Soulful",
+            "icon": "Folk",
+            "track_count": 8709,
+            "mean_features": {
+                "acousticness": 0.148,
+                "danceability": 0.441,
+                "energy": 0.775,
+                "instrumentalness": 0.069,
+                "liveness": 0.194,
+                "valence": 0.629
+            },
+            "sample_tracks": [
+                {
+                    "name": "Blinding Lights",
+                    "artists_clean": "The Weeknd",
+                    "year": 2020
+                },
+                {
+                    "name": "Relaci\u00f3n - Remix",
+                    "artists_clean": "Sech, Daddy Yankee, J Balvin, ROSAL\u00cdA, Farruko",
+                    "year": 2020
+                },
+                {
+                    "name": "Ay, DiOs M\u00edo!",
+                    "artists_clean": "KAROL G",
+                    "year": 2020
+                }
+            ]
+        },
+        "9": {
+            "name": "High-Tempo Club & Electronic",
+            "mood": "Fast-Paced, Driving & Euphoric",
+            "icon": "Electronic",
+            "track_count": 11329,
+            "mean_features": {
+                "acousticness": 0.111,
+                "danceability": 0.487,
+                "energy": 0.725,
+                "instrumentalness": 0.107,
+                "liveness": 0.176,
+                "valence": 0.348
+            },
+            "sample_tracks": [
+                {
+                    "name": "Holy (feat. Chance The Rapper)",
+                    "artists_clean": "Justin Bieber, Chance the Rapper",
+                    "year": 2020
+                },
+                {
+                    "name": "Watermelon Sugar",
+                    "artists_clean": "Harry Styles",
+                    "year": 2019
+                },
+                {
+                    "name": "Heather",
+                    "artists_clean": "Conan Gray",
+                    "year": 2020
+                }
+            ]
+        },
+        "10": {
+            "name": "Vocal Harmony & Classic Choral",
+            "mood": "Lyrical, Reverberant & Gentle",
+            "icon": "Vocal",
+            "track_count": 6508,
+            "mean_features": {
+                "acousticness": 0.735,
+                "danceability": 0.399,
+                "energy": 0.318,
+                "instrumentalness": 0.062,
+                "liveness": 0.174,
+                "valence": 0.496
+            },
+            "sample_tracks": [
+                {
+                    "name": "Mr. Blue Sky",
+                    "artists_clean": "Electric Light Orchestra",
+                    "year": 1977
+                },
+                {
+                    "name": "Landslide",
+                    "artists_clean": "Fleetwood Mac",
+                    "year": 1975
+                },
+                {
+                    "name": "Bubble Gum",
+                    "artists_clean": "Clairo",
+                    "year": 2019
+                }
+            ]
+        },
+        "11": {
+            "name": "Atmospheric Soundtrack & Cinematic",
+            "mood": "Dramatic, Panoramic & Slow",
+            "icon": "Soundtrack",
+            "track_count": 11513,
+            "mean_features": {
+                "acousticness": 0.225,
+                "danceability": 0.698,
+                "energy": 0.659,
+                "instrumentalness": 0.065,
+                "liveness": 0.154,
+                "valence": 0.749
+            },
+            "sample_tracks": [
+                {
+                    "name": "Dynamite",
+                    "artists_clean": "BTS",
+                    "year": 2020
+                },
+                {
+                    "name": "Therefore I Am",
+                    "artists_clean": "Billie Eilish",
+                    "year": 2020
+                },
+                {
+                    "name": "Breaking Me",
+                    "artists_clean": "Topic, A7S",
+                    "year": 2019
+                }
+            ]
+        },
+        "12": {
+            "name": "R&B Grooves & Neo-Soul",
+            "mood": "Sensual, Flowing & Harmonic",
+            "icon": "R&B",
+            "track_count": 2561,
+            "mean_features": {
+                "acousticness": 0.374,
+                "danceability": 0.691,
+                "energy": 0.21,
+                "instrumentalness": 0.0,
+                "liveness": 0.298,
+                "valence": 0.561
+            },
+            "sample_tracks": [
+                {
+                    "name": "Snitches & Rats (Interlude)",
+                    "artists_clean": "21 Savage, Metro Boomin",
+                    "year": 2020
+                },
+                {
+                    "name": "BOOTY CALL (skit)",
+                    "artists_clean": "The Kid LAROI",
+                    "year": 2020
+                },
+                {
+                    "name": "The Man, The Myth, The Legend - Interlude",
+                    "artists_clean": "Juice WRLD",
+                    "year": 2020
+                }
+            ]
+        },
+        "13": {
+            "name": "Alternative Wave & Punk",
+            "mood": "Rebellious, Punchy & Edgy",
+            "icon": "Punk",
+            "track_count": 8550,
+            "mean_features": {
+                "acousticness": 0.906,
+                "danceability": 0.293,
+                "energy": 0.116,
+                "instrumentalness": 0.834,
+                "liveness": 0.148,
+                "valence": 0.15
+            },
+            "sample_tracks": [
+                {
+                    "name": "Clean White Noise - Loopable with no fade",
+                    "artists_clean": "Erik Eriksson, White Noise Baby Sleep, White Noise for Babies",
+                    "year": 2017
+                },
+                {
+                    "name": "Soft Brown Noise",
+                    "artists_clean": "High Altitude Samples",
+                    "year": 2018
+                },
+                {
+                    "name": "White Noise - 500 hz",
+                    "artists_clean": "Granular",
+                    "year": 2017
+                }
+            ]
+        },
+        "14": {
+            "name": "Tropical Latin & Reggaeton",
+            "mood": "Danceable, Warm & Percussive",
+            "icon": "Latin",
+            "track_count": 13101,
+            "mean_features": {
+                "acousticness": 0.664,
+                "danceability": 0.505,
+                "energy": 0.302,
+                "instrumentalness": 0.045,
+                "liveness": 0.143,
+                "valence": 0.336
+            },
+            "sample_tracks": [
+                {
+                    "name": "you broke me first",
+                    "artists_clean": "Tate McRae",
+                    "year": 2020
+                },
+                {
+                    "name": "Someone You Loved",
+                    "artists_clean": "Lewis Capaldi",
+                    "year": 2019
+                },
+                {
+                    "name": "lovely (with Khalid)",
+                    "artists_clean": "Billie Eilish, Khalid",
+                    "year": 2018
+                }
+            ]
+        },
+        "15": {
+            "name": "Dark Ambient & Industrial",
+            "mood": "Heavy, Textured & Intense",
+            "icon": "Industrial",
+            "track_count": 8340,
+            "mean_features": {
+                "acousticness": 0.891,
+                "danceability": 0.532,
+                "energy": 0.314,
+                "instrumentalness": 0.814,
+                "liveness": 0.186,
+                "valence": 0.633
+            },
+            "sample_tracks": [
+                {
+                    "name": "Blue Sky",
+                    "artists_clean": "Allman Brothers Band",
+                    "year": 1972
+                },
+                {
+                    "name": "4:20 PM",
+                    "artists_clean": "Bluedoom",
+                    "year": 2018
+                },
+                {
+                    "name": "Linus And Lucy",
+                    "artists_clean": "Vince Guaraldi Trio",
+                    "year": 1965
+                }
+            ]
+        },
+        "16": {
+            "name": "Upbeat Country & Americana",
+            "mood": "Storytelling, Twangy & Cheerful",
+            "icon": "Country",
+            "track_count": 8916,
+            "mean_features": {
+                "acousticness": 0.137,
+                "danceability": 0.465,
+                "energy": 0.731,
+                "instrumentalness": 0.117,
+                "liveness": 0.192,
+                "valence": 0.391
+            },
+            "sample_tracks": [
+                {
+                    "name": "Put Your Records On",
+                    "artists_clean": "Ritt Momney",
+                    "year": 2020
+                },
+                {
+                    "name": "Wonder",
+                    "artists_clean": "Shawn Mendes",
+                    "year": 2020
+                },
+                {
+                    "name": "UN DIA (ONE DAY) (Feat. Tainy)",
+                    "artists_clean": "J Balvin, Tainy, Dua Lipa, Bad Bunny",
+                    "year": 2020
+                }
+            ]
+        },
+        "17": {
+            "name": "Modern Minimalist Pop",
+            "mood": "Clean, Stripped-Down & Trendy",
+            "icon": "Minimalist",
+            "track_count": 13780,
+            "mean_features": {
+                "acousticness": 0.832,
+                "danceability": 0.613,
+                "energy": 0.355,
+                "instrumentalness": 0.039,
+                "liveness": 0.197,
+                "valence": 0.706
+            },
+            "sample_tracks": [
+                {
+                    "name": "We Belong Together",
+                    "artists_clean": "Ritchie Valens",
+                    "year": 1959
+                },
+                {
+                    "name": "Walkin' After Midnight",
+                    "artists_clean": "Patsy Cline",
+                    "year": 1957
+                },
+                {
+                    "name": "Mambo Italiano",
+                    "artists_clean": "Dean Martin",
+                    "year": 1954
+                }
+            ]
+        },
+        "18": {
+            "name": "Psychedelic & Experimental Soundscapes",
+            "mood": "Mind-Bending, Spatial & Free",
+            "icon": "Psychedelic",
+            "track_count": 169,
+            "mean_features": {
+                "acousticness": 0.756,
+                "danceability": 0.37,
+                "energy": 0.366,
+                "instrumentalness": 0.275,
+                "liveness": 0.501,
+                "valence": 0.301
+            },
+            "sample_tracks": [
+                {
+                    "name": "Natural White Noise for Babies - Ocean Waves for Baby Sleep",
+                    "artists_clean": "One Hour Gulf Coast Ocean Waves",
+                    "year": 2010
+                },
+                {
+                    "name": "Ocean Waves for Sleep",
+                    "artists_clean": "Ocean Waves For Sleep",
+                    "year": 2010
+                },
+                {
+                    "name": "Tubular Bells - Pt. I",
+                    "artists_clean": "Mike Oldfield",
+                    "year": 1973
+                }
+            ]
+        },
+        "19": {
+            "name": "Epic Orchestral Anthems",
+            "mood": "Triumphant, Grand & Symphonic",
+            "icon": "Orchestral",
+            "track_count": 7160,
+            "mean_features": {
+                "acousticness": 0.412,
+                "danceability": 0.477,
+                "energy": 0.631,
+                "instrumentalness": 0.113,
+                "liveness": 0.768,
+                "valence": 0.533
+            },
+            "sample_tracks": [
+                {
+                    "name": "death bed (coffee for your head)",
+                    "artists_clean": "Powfu, beabadoobee",
+                    "year": 2020
+                },
+                {
+                    "name": "Mad at Disney",
+                    "artists_clean": "salem ilese",
+                    "year": 2020
+                },
+                {
+                    "name": "wish you were gay",
+                    "artists_clean": "Billie Eilish",
+                    "year": 2019
+                }
+            ]
+        }
+    }
+}

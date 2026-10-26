@@ -1,155 +1,83 @@
 import streamlit as st
-import boto3
 import pandas as pd
-from evidently.report import Report
-from evidently.metric_preset import DataDriftPreset,DataQualityPreset
-from datetime import datetime,timedelta
+import numpy as np
+from prediction_model.config import config
+from drift_monitoring.drift_detector import AudioDriftDetector
+from prediction_model.processing.preprocessing import CLUSTER_ARCHETYPES
 
-# Initialize the S3 client
-s3 = boto3.client('s3')
+st.set_page_config(page_title="Spotify MLOps - Drift Monitor", page_icon="🛡️", layout="wide")
 
-# S3 bucket name
-bucket_name = 'loanprediction'
+st.markdown("""
+<style>
+    .main { background-color: #0b0f19; color: #f8fafc; }
+    .stMetric { background: rgba(30, 41, 59, 0.7); border-radius: 10px; padding: 12px; border: 1px solid rgba(255,255,255,0.08); }
+</style>
+""", unsafe_allow_html=True)
 
-# Function to list folders in the specified S3 bucket and prefix
-def list_folders(bucket_name, prefix):
-    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix, Delimiter='/')
-    return [content.get('Prefix') for content in response.get('CommonPrefixes', [])]
+st.title("🛡️ Spotify MLOps: Data Drift & Feature Quality Monitor")
+st.caption("Continuous Monitoring & Statistical Divergence Analysis (Kolmogorov-Smirnov & Wasserstein Distance)")
 
-# Function to list CSV files in a specified S3 folder
-def list_csv_files(bucket_name, folder):
-    response = s3.list_objects_v2(Bucket=bucket_name, Prefix=folder)
-    return [content['Key'] for content in response.get('Contents', []) if content['Key'].endswith('.csv')]
+detector = AudioDriftDetector()
+baseline_df = detector.load_baseline()
 
-# Function to download a CSV file from S3 and load it into a DataFrame
-def load_csv_from_s3(bucket_name, key):
-    response = s3.get_object(Bucket=bucket_name, Key=key)
-    return pd.read_csv(response['Body'])
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.metric("Baseline Samples", f"{len(baseline_df):,}")
+with col2:
+    st.metric("Monitored Features", f"{len(config.AUDIO_FEATURES)}")
+with col3:
+    st.metric("Significance Threshold (α)", f"{config.DRIFT_P_VALUE_THRESHOLD}")
+with col4:
+    st.metric("Model Version", config.MODEL_VERSION)
 
-# Function to calculate data drift using Evidently
-def calculate_data_drift_evidently(baseline_df, latest_df):
-    report = Report(metrics=[DataDriftPreset()])
-    report.run(reference_data=baseline_df, current_data=latest_df)
-    return report
+st.markdown("---")
 
-def calculate_data_quality_evidently(baseline_df, latest_df):
-    report = Report(metrics=[DataQualityPreset()])
-    report.run(reference_data=baseline_df, current_data=latest_df)
-    return report
+tab1, tab2, tab3 = st.tabs(["📊 Live Drift Test", "🎯 Test Simulated Drift", "🔍 Feature Distribution Comparison"])
 
-# Function to find the most recent folder
-def find_most_recent_folder(bucket_name, prefix, max_days=7):
-    for i in range(max_days):
-        check_date = (datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d')
-        check_date_folder = f'{prefix}{check_date}/'
-        if check_date_folder in list_folders(bucket_name, prefix):
-            return check_date_folder
-    return None
-
-# Main Streamlit app
-def main():
-
-    # add_custom_css()
-    st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Select a page:", ["Data Drift", "Data Quality"])
-
-    #st.title('Data Analysis')
-    # st.title('Data Drift Analysis')
-    if page == "Data Drift":
-        st.header('Data Drift Analysis')
-        prefix = 'datadrift/'
-        # current_date = datetime.now().strftime('%Y-%m-%d')
-        # current_date_folder = f'{prefix}{current_date}/'
-
-        most_recent_folder = find_most_recent_folder(bucket_name, prefix)
-
-        # List all folders in the datadrift directory
-        # folders = list_folders(bucket_name, prefix)
+with tab1:
+    st.subheader("Test Current Production Batch for Distribution Drift")
+    uploaded_file = st.file_uploader("Upload incoming inference CSV batch", type=["csv"])
+    
+    if uploaded_file is not None:
+        curr_df = pd.read_csv(uploaded_file)
+        results = detector.detect_drift(curr_df)
         
-        # if current_date_folder in folders:
-        if most_recent_folder:
-            # Load the baseline CSV
-            baseline_csv_key = 'datadrift/baseline.csv'
-            baseline_df = load_csv_from_s3(bucket_name, baseline_csv_key)
-
-            # Drop 'Loan_ID' and 'Loan_Status' columns from the baseline DataFrame
-            baseline_df = baseline_df.drop(columns=['Loan_ID', 'Loan_Status'])
-
-            # List all CSV files in the current date folder
-            latest_csv_files = list_csv_files(bucket_name, most_recent_folder)
-            
-            # Streamlit dropdown for selecting the target dataset
-            selected_file = st.selectbox('Select the target dataset', latest_csv_files)
-
-            if selected_file:
-                # Load and process the selected target dataset
-                latest_df = load_csv_from_s3(bucket_name, selected_file)
-
-                # Calculate data drift
-                drift_report = calculate_data_drift_evidently(baseline_df, latest_df)
-                
-                #Replace colons with underscores in the filename
-                safe_filename = selected_file.split("/")[-1].replace(":", "_")
-                
-                report_filename = f'drift_report_{safe_filename}.html'
-                drift_report.save_html(report_filename)
-                
-                
-                # Display the report
-                with open(report_filename, 'r', encoding='utf-8') as f:
-                    html_content = f.read()
-                    st.components.v1.html(html_content, height=1000,width=1000,scrolling=True)
-        else:
-            st.write(f'No folder found ')
-
-    elif page == "Data Quality":
-        st.header('Data Quality Analysis')
-        prefix = 'datadrift/'
-        # current_date = datetime.now().strftime('%Y-%m-%d')
-        # current_date_folder = f'{prefix}{current_date}/'
-
-        # List all folders in the datadrift directory
-        #folders = list_folders(bucket_name, prefix)
-        most_recent_folder = find_most_recent_folder(bucket_name, prefix)
+        status_color = "green" if results["status"] == "HEALTHY" else "orange" if results["status"] == "DRIFT_WARNING" else "red"
+        st.markdown(f"### Status: :{status_color}[{results['status']}]")
+        st.write(results["status_description"])
         
-        if  most_recent_folder:
-            # Load the baseline CSV
-            baseline_csv_key = 'datadrift/baseline.csv'
-            baseline_df = load_csv_from_s3(bucket_name, baseline_csv_key)
+        c_a, c_b = st.columns(2)
+        c_a.metric("Drift Share", f"{results['drift_share_percent']}%")
+        c_b.metric("Drifted Features", f"{results['drifted_features_count']} / {results['total_features_tested']}")
+        
+        st.dataframe(pd.DataFrame(results["feature_drifts"]).T)
 
-            # Drop 'Loan_ID' and 'Loan_Status' columns from the baseline DataFrame
-            baseline_df = baseline_df.drop(columns=['Loan_ID', 'Loan_Status'])
+with tab2:
+    st.subheader("Simulate Production Data Shifts")
+    drift_scenario = st.selectbox("Select Scenario", [
+        ("retro_acoustic", "Retro 1930s Acoustic Shift (Loudness drop, High Acousticness)"),
+        ("high_bpm_edm", "Modern High-BPM EDM Wave (High Danceability & Energy, High Tempo)")
+    ], format_func=lambda x: x[1])
+    
+    if st.button("Run Drift Simulation"):
+        sim_df = detector.generate_synthetic_drift_batch(drift_type=drift_scenario[0], n_samples=300)
+        sim_results = detector.detect_drift(sim_df)
+        
+        st.warning(f"Detected Status: {sim_results['status']} ({sim_results['drift_share_percent']}% features drifted)")
+        st.write(sim_results["status_description"])
+        
+        drift_table = []
+        for feat, d in sim_results["feature_drifts"].items():
+            drift_table.append({
+                "Feature": feat,
+                "Drifted?": "🚨 YES" if d["has_drifted"] else "✅ NO",
+                "KS Statistic": d["ks_statistic"],
+                "p-value": d["p_value"],
+                "Baseline Mean": d["baseline_mean"],
+                "Batch Mean": d["current_mean"]
+            })
+        st.dataframe(pd.DataFrame(drift_table))
 
-            # List all CSV files in the current date folder
-            latest_csv_files = list_csv_files(bucket_name, most_recent_folder)
-            
-            # Streamlit dropdown for selecting the target dataset
-            selected_file = st.selectbox('Select the target dataset', latest_csv_files)
-
-            if selected_file:
-                # Load and process the selected target dataset
-                latest_df = load_csv_from_s3(bucket_name, selected_file)
-
-                latest_df=latest_df.drop(['Prediction'],axis=1)
-
-                # Calculate data drift
-                drift_report = calculate_data_quality_evidently(baseline_df, latest_df)
-                
-                #Replace colons with underscores in the filename
-                safe_filename = selected_file.split("/")[-1].replace(":", "_")
-                
-                report_filename = f'drift_report_{safe_filename}.html'
-                drift_report.save_html(report_filename)
-                
-                
-                # Display the report
-                with open(report_filename, 'r', encoding='utf-8') as f:
-                    html_content = f.read()
-                    st.components.v1.html(html_content, height=1000,width=1300,scrolling=True)
-      
-        else:
-            st.write(f'No folder found ')
-
-
-if __name__ == "__main__":
-    main()
+with tab3:
+    st.subheader("Baseline Feature Statistics")
+    st.dataframe(baseline_df[config.AUDIO_FEATURES].describe().T)

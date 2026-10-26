@@ -1,0 +1,48 @@
+services:
+  # ─── MLOps FastAPI Application ─────────────────────────────
+  mlops-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spotify-mlops-app
+    ports:
+      - "8005:8005"
+    environment:
+      - PYTHONPATH=/app
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8005/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - mlops-network
+    restart: unless-stopped
+
+  # ─── Prometheus Monitoring ─────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    depends_on:
+      - mlops-app
+    networks:
+      - mlops-network
+    restart: unless-stopped
+
+volumes:
+  prometheus-data:
+    driver: local
+
+networks:
+  mlops-network:
+    driver: bridge
